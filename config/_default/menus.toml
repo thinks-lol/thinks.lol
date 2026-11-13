@@ -1,13 +1,8 @@
 
 [[main]]
-name = "Hexfield"
-url = "/hexfield/"
-weight = 2
-
-[[main]]
 name = "About"
 url = "/about/"
-weight = 3
+weight = 2
 
 [[main]]
 name = "RSS"
