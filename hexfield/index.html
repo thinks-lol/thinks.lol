@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111719"><meta name="description" content="A spacious hexagonal instrument. Play Wicki–Hayden, Sonome and custom microtonal layouts with sound, USB MIDI, or experimental audio encoding.">
+<title>Hexfield — a different shape of music</title>
+<link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="manifest" href="./manifest.webmanifest"><link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+ <a class="brand" href="./" aria-label="Hexfield home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 29 9.5v13L16 30 3 22.5v-13Z"/><path d="m3 9.5 13 7.4 13-7.4M16 17v13"/></svg><span>hexfield<span class="version">01</span></span></a>
+ <div class="top-actions"><button class="icon-button" id="fullscreen" aria-label="Enter fullscreen" title="Fullscreen"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button><button class="icon-button" id="settings" aria-label="Open settings" title="Settings"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="17" r="3"/></svg></button><button id="output" class="output-button"><span class="status-dot"></span><span id="output-label">Connect</span><span class="chevron">↗</span></button></div>
+</header>
+<section class="control-strip" aria-label="Keyboard controls">
+ <div class="field layout-field"><label for="layout">LAYOUT</label><select id="layout"><option value="wicki">Wicki–Hayden</option><option value="sonome">Sonome</option><option value="chromatic">Chromatic</option><option value="custom">Custom</option></select></div>
+ <span class="divider"></span>
+ <div class="field"><label for="tuning">TUNING</label><select id="tuning"><option value="12">12 EDO</option><option value="19">19 EDO</option><option value="22">22 EDO</option><option value="24">24 EDO</option><option value="31">31 EDO</option><option value="53">53 EDO</option></select></div>
+ <span class="divider optional"></span>
+ <div class="field root-field"><label for="root">ROOT</label><select id="root"></select></div>
+ <div class="scale-field field"><label for="scale">HIGHLIGHT</label><select id="scale"><option value="major">Major</option><option value="minor">Minor</option><option value="pentatonic">Pentatonic</option><option value="all">All notes</option></select></div>
+</section>
+<main id="board-wrap">
+ <div class="board-caption"><span id="axis-label">+2 → &nbsp; +7 ↗ &nbsp; +5 ↖</span><span id="tuning-caption">Same shape. Every key.</span></div>
+ <canvas id="board" tabindex="0" role="application" aria-label="Hexagonal musical keyboard. Connect an output, then touch or click the keys. On a computer, use A S D F G H J K and Q W E R T Y U I for two rows."></canvas>
+ <div id="empty-hint" class="empty-hint"><span>Find your own shape.</span><button id="start">Choose an output <span>↗</span></button></div>
+ <div class="board-bottom"><span><i class="legend-dot root-dot"></i>root <i class="legend-dot scale-dot"></i>in scale</span><span id="board-tip">Touch to play · slide to explore</span></div>
+</main>
+<footer class="performance-bar">
+ <div class="octave-control"><button id="octave-down" aria-label="Lower one octave">−</button><div><span class="micro-label">OCTAVE</span><strong id="octave-label">0</strong></div><button id="octave-up" aria-label="Raise one octave">+</button></div>
+ <button id="sustain" class="sustain" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 7v8a3 3 0 0 0 3 3h4a3 3 0 0 0 3-3V7m-6 0v8m10-8v11"/></svg><span>Hold</span></button>
+ <div class="now-playing" aria-live="off"><div class="meter" id="meter"><i></i><i></i><i></i><i></i><i></i></div><div><strong id="note-readout">Ready when you are</strong><span id="detail-readout">An instrument, not a piano.</span></div></div>
+ <button id="panic" class="panic" title="Release all notes (Escape)"><span>■</span><span>Stop</span></button>
+</footer>
+</div>
+<dialog id="output-dialog" class="sheet">
+ <div class="sheet-head"><div><span class="eyebrow">MAKE A CONNECTION</span><h1>Where should it go?</h1></div><button class="icon-button close" aria-label="Close output settings">✕</button></div>
+ <p class="intro">Play here, control an instrument, or experiment with a signal over audio.</p>
+ <div class="route-tabs" role="tablist" aria-label="Output type"><button role="tab" id="tab-sound" aria-controls="route-sound" aria-selected="true" data-mode="sound">Sound</button><button role="tab" id="tab-midi" aria-controls="route-midi" aria-selected="false" data-mode="midi">USB MIDI</button><button role="tab" id="tab-raw" aria-controls="route-raw" aria-selected="false" data-mode="raw">Audio MIDI <span>LAB</span></button></div>
+ <section id="route-sound" class="route-panel" role="tabpanel" aria-labelledby="tab-sound">
+  <div class="route-icon">◉</div><h2>Just play.</h2><p>A responsive, polyphonic synth inside your browser. Works with every tuning.</p>
+  <label class="setting-row"><span>Voice</span><select id="voice"><option value="soft">Soft triangle</option><option value="pure">Pure sine</option><option value="bright">Bright saw</option></select></label>
+  <label class="setting-row"><span>Volume</span><input id="volume" type="range" min="0" max="100" value="45" aria-label="Synth volume"></label>
+ </section>
+ <section id="route-midi" class="route-panel" role="tabpanel" aria-labelledby="tab-midi" hidden>
+  <div class="route-icon">↗</div><h2>Your synth. This keyboard.</h2><p>Connect a USB MIDI instrument or interface to your phone, then find it below.</p>
+  <button id="find-midi" class="secondary wide">Find MIDI devices</button><label class="setting-row"><span>Destination</span><select id="midi-device" aria-label="MIDI output device"><option value="">No device selected</option></select></label>
+  <p class="small" id="midi-help">Chrome supports Web MIDI on Android. No microphone access is needed.</p>
+ </section>
+ <section id="route-raw" class="route-panel" role="tabpanel" aria-labelledby="tab-raw" hidden>
+  <div class="route-icon lab-icon">⌁</div><h2>MIDI bytes. Audio samples.</h2><p>Experimental 31,250-baud encoder. Sends note messages as a stereo waveform through the selected sound output.</p>
+  <div class="notice"><strong>This needs compatible interface hardware.</strong><span>A headphone DAC is not a MIDI output. AC coupling, voltage, filtering and resampling can prevent a synth from reading this. The waveform has been checked digitally; the physical connection has not. Keep speakers and headphones disconnected when using this mode.</span></div>
+  <label class="setting-row"><span>Nominal polarity</span><select id="polarity"><option value="a">A · ring positive</option><option value="b">B · tip positive</option></select></label>
+  <label class="setting-row"><span>Signal amplitude</span><input id="amplitude" type="range" min="5" max="90" value="35" aria-label="Encoder amplitude"><output id="amplitude-value">35%</output></label>
+  <p class="small">Requests a 96 kHz audio context. This does not guarantee a 96 kHz DAC path. Uses stereo channel difference, with zero output between messages.</p>
+ </section>
+ <div id="audio-device-row"><button id="choose-audio" class="secondary wide">Choose sound output <span>↗</span></button><p class="small" id="audio-device-help">Uses your system output unless this browser supports device selection.</p></div>
+ <div id="midi-options" hidden><label class="setting-row"><span>Per-note tuning <small>MPE · enable on your synth too</small></span><input type="checkbox" id="mpe" role="switch"></label><label class="setting-row" id="channel-row"><span>MIDI channel</span><select id="channel"></select></label><p class="small" id="tuning-help">Standard MIDI works with 12 EDO. Other tunings require MPE; the synth must use a ±48-semitone member-channel bend range.</p></div>
+ <div id="route-error" class="error" role="alert" hidden></div>
+ <div class="sheet-actions"><button id="disconnect" class="secondary" hidden>Disconnect</button><button id="connect" class="primary">Play with sound <span>↗</span></button></div>
+ <p id="connection-status" class="small status-line" aria-live="polite"></p>
+</dialog>
+<dialog id="settings-dialog" class="sheet settings-sheet">
+ <div class="sheet-head"><div><span class="eyebrow">MAKE IT YOURS</span><h1>A little room to explore.</h1></div><button class="icon-button close" aria-label="Close keyboard settings">✕</button></div>
+ <label class="setting-row"><span>Key size <small>More space or more notes</small></span><input type="range" id="key-size" min="24" max="62" value="38" aria-label="Hexagon key size"></label>
+ <label class="setting-row"><span>Scale highlight</span><select id="settings-scale"><option value="major">Major</option><option value="minor">Minor</option><option value="pentatonic">Pentatonic</option><option value="all">All notes</option></select></label>
+ <label class="setting-row"><span>Labels</span><select id="labels"><option value="notes">Notes / tuning steps</option><option value="degrees">Scale degrees</option></select></label>
+ <label class="setting-row"><span>Touch velocity <small>Fixed, predictable note strength</small></span><input type="range" id="velocity" min="20" max="127" value="100" aria-label="MIDI velocity"></label>
+ <label class="setting-row"><span>Haptic taps <small>When supported by your phone</small></span><input type="checkbox" id="haptic" role="switch"></label>
+ <div class="section-label">CUSTOM LAYOUT</div><p class="small">Intervals are measured in steps of the chosen tuning. Select Custom in the layout menu to use them.</p>
+ <div class="axes"><label>Across →<input id="axis-a" type="number" min="-53" max="53" value="2"></label><label>Up-right ↗<input id="axis-b" type="number" min="-53" max="53" value="7"></label></div>
+ <div class="section-label">PLAYING NOTES</div><p class="small">Drag a finger to move between notes. Hold latches released notes; tap it again to release them. Stop releases everything. Turn your phone sideways for a wider keyboard.</p>
+ <p class="small">Computer keyboard: A–K and Q–I play two rows. Z / X shift octaves. Space toggles Hold. Escape stops notes.</p>
+ <details><summary>About the audio experiment</summary><p class="small">The encoder serializes complete MIDI messages as 8N1 UART, least significant bit first, at 31,250 bits/s. In nominal Type A mode, the right audio channel is positive and the left negative for current-on bits; Type B reverses them. These are normalized audio samples, not specified MIDI voltages or current. A polarity choice cannot convert a DAC into a MIDI interface. Use an appropriate level-conversion/interface circuit, or use USB MIDI for standard hardware control.</p><p class="small">Only the internal synth and an MPE-enabled destination can play the non-12-EDO tunings in this version. Ordinary MIDI output remains available for 12 EDO. No recordings or permissions are sent to a server.</p></details>
+ <button id="reset" class="secondary wide">Reset keyboard preferences</button>
+ <p class="signature">HEXFIELD / 01 <span>Music has more than one shape.</span></p>
+</dialog>
+<div id="toast" role="status" class="toast" hidden></div>
+<script type="module" src="./app.js"></script>
+</body></html>
