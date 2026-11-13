@@ -1,4 +1,4 @@
-# baseURL = "https://thinks.lol/"
+baseURL = "https://thinks.lol/"
 languageCode = "en-us"
 title = "thinks.lol"
 defaultContentLanguage = "en"
