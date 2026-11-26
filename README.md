@@ -11,7 +11,7 @@ theme as a Hugo module, built by GitHub Actions and published to GitHub Pages at
 | `content/` | Posts and pages. Posts use `/:year/:month/:title/` permalinks. |
 | `config/_default/` | Hugo config: site, menus, params, markup, module. |
 | `static/` | Copied verbatim to the site root — `CNAME` lives here. |
-| `hexfield/` | Git submodule: the [Hexfield](https://github.com/thinks-lol/hexfield) instrument, published at `/hexfield/`. |
+| `hexfield/` | Git submodule: the [Hexfield](https://github.com/thinks-lol/hexfield) instrument, published at `/hexfield/`. **Temporary** — it is moving to `hexfield.thinks.lol`; see that repo's [docs/deploy.md](https://github.com/thinks-lol/hexfield/blob/main/docs/deploy.md). |
 | `.github/workflows/hugo.yml` | Builds with `make prod_build` and deploys `public/` to `gh-pages`. |
 
 ## Local development
@@ -32,6 +32,15 @@ git submodule update --init
 ```
 
 ## The Hexfield instrument
+
+## The Hexfield instrument
+
+> **Pending removal.** `hexfield/` and the `publish-hexfield` step are temporary.
+> The instrument is moving to its own hostname, `hexfield.thinks.lol`, and will be
+> taken back out of this repo. It is blocked on one Cloudflare `CNAME` record.
+> The checklist is in
+> [hexfield/docs/deploy.md](https://github.com/thinks-lol/hexfield/blob/main/docs/deploy.md).
+> Until then the page is live but deliberately unlinked from the navigation.
 
 <https://thinks.lol/hexfield/> is a browser instrument on a hexagonal lattice:
 the same key shape gives the same intervals in every tuning, with Wicki–Hayden,
